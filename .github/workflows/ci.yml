@@ -1,0 +1,20 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    name: Build, vet & test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          # Patched toolchain (clears Go stdlib security advisories fixed in
+          # go1.26.x point releases).
+          go-version: '1.26.5'
+      - run: go build ./...
+      - run: go vet ./...
+      - run: go test ./...
